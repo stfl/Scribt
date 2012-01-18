@@ -20,7 +20,7 @@ public class parsePdf {
 			super();
 		}
 		
-		public void setString(String inputString) {
+		public synchronized void setString(String inputString) {
 			this.inputString = inputString;
 		}
 		
