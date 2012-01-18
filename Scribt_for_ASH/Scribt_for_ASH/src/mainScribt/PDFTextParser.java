@@ -59,7 +59,7 @@ public class PDFTextParser {
           } else if (listOfFiles[i].isDirectory()) {
           }
         }
-      
+        
         if (!f.isFile()) {
             System.out.println("File " + fileName + " does not exist.");
             return null;
@@ -85,11 +85,20 @@ public class PDFTextParser {
                    if (cosDoc != null) cosDoc.close();
                    if (pdDoc != null) pdDoc.close();
                } catch (Exception e1) {
+            	   System.out.println("Did not close File.");
                e.printStackTrace();
             }
             return null;
         }      
         System.out.println("Done.");
+        
+        try {
+            if (cosDoc != null) cosDoc.close();
+            if (pdDoc != null) pdDoc.close();
+        } catch (Exception e1) {
+     	   System.out.println("Did not close File.");
+        }
+        
         return parsedText;
     }
     

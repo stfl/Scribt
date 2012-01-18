@@ -7,11 +7,14 @@ import java.io.IOException;
 public class WorkerBeeForASH {
 	
 	String textContent = "";
-	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Gemeinde Weistrach_2- 10.10.2011.pdf";
+	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files";
+	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
 	parsePdf parser;
 	PDFTextParser pdfTextParserObj;
 	String result;
+	
+	File[] listOfFiles;
 	
 	public WorkerBeeForASH() {
 		super();
@@ -20,34 +23,39 @@ public class WorkerBeeForASH {
 	
 	public void work() {
 		
-		findFiles();
+		findFiles(pathToFiles);
 		
-		convertPdfToTxt();
-		
-		parser = new parsePdf();
-		parser.setString(textContent);
-		try {
-			parser.parse();
-			System.out.println(filenamePDF + "\n" +
-					"Datum: " + parser.getDatum() + "\t" + 
-					"Kennzahl: " + parser.getKennzahl() + "\t" + 
-					"Leistung: " + parser.getLeistung() + " kWp\t" + 
-					"Nachname: " + parser.getNachname() + "\t");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
+				
+				convertPdfToTxt(listOfFiles[i].getName());
+				
+				parser = new parsePdf();
+				parser.setString(textContent);
+				try {
+					parser.parse();
+					System.out.println(listOfFiles[i] + "\n" +
+							"Datum: " + parser.getDatum() + "\t" + 
+							"Kennzahl: " + parser.getKennzahl() + "\t" + 
+							"Leistung: " + parser.getLeistung() + " kWp\t" + 
+							"Nachname: " + parser.getNachname() + "\t\n");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				result += parser.getNachname() + ";" + 
+		    			parser.getLeistung() + ";" + 
+		    			parser.getKennzahl() + ";" + 
+		    			parser.getDatum() + "\n";
+				pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
+			}
 		}
-		result = parser.getNachname() + ";" + 
-    			parser.getLeistung() + ";" + 
-    			parser.getKennzahl() + ";" + 
-    			parser.getDatum();
-		pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
 	}
 	
-	public void convertPdfToTxt() {
+	public void convertPdfToTxt(String filenamePDF) {
 		
         pdfTextParserObj = new PDFTextParser();
         textContent = pdfTextParserObj.pdftoText(filenamePDF);
@@ -63,14 +71,15 @@ public class WorkerBeeForASH {
         }
     }
 	
-	private void findFiles() {
+	/**
+	 * read all files in a folder
+	 */
+	private void findFiles(String path) {
 		
-		File f;
-        
-		File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
-        File[] listOfFiles = folder.listFiles();
-        
-        int j = 0;
+//		File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
+		File folder = new File(path);
+        listOfFiles = folder.listFiles();
+
         for (int i = 0; i < listOfFiles.length; i++) {
         	if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
         		System.out.println(listOfFiles[i]);
