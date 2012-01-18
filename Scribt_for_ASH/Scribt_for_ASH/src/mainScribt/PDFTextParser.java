@@ -46,7 +46,7 @@ public class PDFTextParser {
     // Extract text from PDF Document
     String pdftoText(String fileName) {
         
-        System.out.println("Parsing text from PDF file " + fileName + "....");
+//        System.out.println("Parsing text from PDF file " + fileName + "....");
         File f = new File(fileName);
         
         
@@ -57,7 +57,7 @@ public class PDFTextParser {
           if (listOfFiles[i].isFile()) {
         	  if (listOfFiles[i].getName().equals(fileName)) {
         		  f = listOfFiles[i];
-        		  System.out.println("found file: " + fileName);
+//        		  System.out.println("found file: " + fileName);
         	  }
           } else if (listOfFiles[i].isDirectory()) {
         	  // folder in folder (in folder...)?
