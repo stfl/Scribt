@@ -50,8 +50,10 @@ public class parsePdf {
 								if (zeileArray[0].toLowerCase().equals(excludeTitles[j]) || zeileArray[0].toLowerCase().equals(excludeTitles[j]+".")) {
 									i++;
 								}
-								if (zeileArray[i].equals("und")) i+=2;
 							}
+							if (zeileArray.length >= i+1) {
+								if (zeileArray[i].equals("und")) i+=2;
+							} 
 							if (zeileArray.length < i+1) {
 								System.out.println("_NO_ Nachname found\n");
 							} else {
@@ -116,6 +118,10 @@ public class parsePdf {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			if (this.Leistung == null) {
+				
 			}
 		}	
 
