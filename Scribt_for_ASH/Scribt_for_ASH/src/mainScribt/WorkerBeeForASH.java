@@ -25,10 +25,10 @@ public class WorkerBeeForASH {
 		parser.setString(textContent);
 		try {
 			parser.parse();
-			System.out.println(parser.getDatum() + "\n" + 
-					parser.getKennzahl() + "\n" + 
-					parser.getLeistung() + "\n" + 
-					parser.getNachname() + "\n\n");
+			System.out.println("Datum: " + parser.getDatum() + "\n" + 
+					"Kennzahl: " + parser.getKennzahl() + "\n" + 
+					"Leistung: " + parser.getLeistung() + " kWh\n" + 
+					"Nachname: " + parser.getNachname() + "\n\n");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
