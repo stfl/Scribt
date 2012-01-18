@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 public class WorkerBeeForASH {
 	
 	String textContent = "";
-	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/renameTest";
+	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/01-2011";
 //	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
 	parsePdf parser;

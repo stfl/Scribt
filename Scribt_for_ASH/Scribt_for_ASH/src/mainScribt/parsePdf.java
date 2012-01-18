@@ -94,7 +94,7 @@ public class parsePdf {
 					
 					if (zeile.startsWith("Leistung der")){
 						int end = zeile.indexOf("kWp");
-						if (end != 1) {
+						if (end >= 1) {
 							int begin = zeile.substring(0, end-3).lastIndexOf(" ");
 							this.Leistung = zeile.substring(begin+1, end-1);
 						}
@@ -134,7 +134,7 @@ public class parsePdf {
 				    break;
 				}
 				int end = s.indexOf("kWp");
-				if (end != 1) {
+				if (end >= 1) {
 					this.LeistungNeu = s.substring(4, end-1);
 					this.Leistung = "";
 					
