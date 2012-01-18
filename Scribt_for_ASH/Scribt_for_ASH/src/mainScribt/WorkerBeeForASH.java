@@ -2,6 +2,8 @@ package mainScribt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkerBeeForASH {
@@ -15,6 +17,9 @@ public class WorkerBeeForASH {
 	String result;
 	
 	File[] listOfFiles;
+	File tmpFile;
+	FileReader in;
+	FileWriter out;
 	
 	public WorkerBeeForASH() {
 		super();
@@ -40,10 +45,8 @@ public class WorkerBeeForASH {
 							"Leistung: " + parser.getLeistung() + " kWp\t" + 
 							"Nachname: " + parser.getNachname() + "\t\n");
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				result += parser.getNachname() + ";" + 
@@ -51,8 +54,47 @@ public class WorkerBeeForASH {
 		    			parser.getKennzahl() + ";" + 
 		    			parser.getDatum() + "\n";
 				pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
-			}
+				
+				File f = new File(pathToFiles + "/arrangedCopies");
+				try{
+					if(f.mkdir());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+						"_" + parser.getDatum() + ".pdf");
+				
+				// rename
+				
+				try {
+					in = new FileReader(listOfFiles[i]);
+					out = new FileWriter(tmpFile);
+				    int c;
+
+				    while ((c = in.read()) != -1) {
+				      out.write(c);
+
+				    
+				    }
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			    
+			  }
+			
+//				listOfFiles[i].renameTo(tmpFile);
+				
 		}
+		try {
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
 	}
 	
 	public void convertPdfToTxt(String filenamePDF) {
@@ -79,13 +121,6 @@ public class WorkerBeeForASH {
 //		File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
 		File folder = new File(path);
         listOfFiles = folder.listFiles();
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-        	if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
-        		System.out.println(listOfFiles[i]);
-        	}
-        }
-        
 	}
 	
 }

@@ -43,9 +43,6 @@ public class PDFTextParser {
         System.out.println("Parsing text from PDF file " + fileName + "....");
         File f = new File(fileName);
         
-        /**
-         * TODO dynamic path
-         */
         File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
         File[] listOfFiles = folder.listFiles();
 
@@ -57,6 +54,7 @@ public class PDFTextParser {
         		  System.out.println("found file: " + fileName);
         	  }
           } else if (listOfFiles[i].isDirectory()) {
+        	  // folder in folder (in folder...)?
           }
         }
         
@@ -90,7 +88,7 @@ public class PDFTextParser {
             }
             return null;
         }      
-        System.out.println("Done.");
+//        System.out.println("Done.");
         
         try {
             if (cosDoc != null) cosDoc.close();
@@ -105,7 +103,7 @@ public class PDFTextParser {
     // Write the parsed text from PDF to a file
     void writeTexttoFile(String pdfText, String fileName) {
     	
-    	System.out.println("\nWriting PDF text to output text file " + fileName + "....");
+//    	System.out.println("\nWriting PDF text to output text file " + fileName + "....");
     	try {
     		PrintWriter pw = new PrintWriter(fileName);
     		pw.print(pdfText);
@@ -114,7 +112,7 @@ public class PDFTextParser {
     		System.out.println("An exception occured in writing the pdf text to file.");
     		e.printStackTrace();
     	}
-    	System.out.println("Done.");
+//    	System.out.println("Done.");
     }
     
 }
