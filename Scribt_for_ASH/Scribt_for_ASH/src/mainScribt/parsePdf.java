@@ -39,31 +39,38 @@ public class parsePdf {
 				String zeile = null;
 				while ((zeile = in.readLine()) != null) {
 					
-					if (foundNachname == true) {
-						int i= 1;
-						String[] zeileArray = zeile.split(" ",5);
-						for (int j=0; j< excludeTitles.length ;j++) {
-							if (zeileArray[0].toLowerCase().equals(excludeTitles[j]) || zeileArray[0].toLowerCase().equals(excludeTitles[j]+".")) {
-								i++;
+					//System.out.println("NachnameDone = " + NachnameDone + " foundNachname: " + foundNachname + " foundGmbH: " + foundGmbH);
+					if (NachnameDone == false) {
+						if (foundNachname == true) {
+							int i= 1;
+							String[] zeileArray = zeile.split(" ",5);
+							for (int j=0; j< excludeTitles.length ;j++) {
+								if (zeileArray[0].toLowerCase().equals(excludeTitles[j]) || zeileArray[0].toLowerCase().equals(excludeTitles[j]+".")) {
+									i++;
+								}
+								if (zeileArray[i].equals("und")) i+=2;
 							}
-							if (zeileArray[i].equals("und")) i+=2;
+							if (zeileArray.length < i+1) {
+								System.out.println("_NO_ Nachname found\n");
+							} else {
+								this.Nachname = zeileArray[i];
+							}
+							foundNachname = false;
+							NachnameDone = true;
+							
+						} else if (foundGmbH == true){
+							this.Nachname = zeile;
+							foundGmbH = false;
+							NachnameDone = true;
+							
+						} else if (zeile.startsWith("Herrn") || zeile.startsWith("Frau") && foundNachname == false) { //only once
+							foundNachname = true;
+							
+						} else if (zeile.startsWith("An den") && foundGmbH == false) {
+							foundGmbH = true;
+							System.out.println("foundgmbh");
 						}
-						if (zeileArray.length < i+1) {
-							System.out.println("_NO_ Nachname found\n");
-						} else {
-							this.Nachname = zeileArray[i];
-						}
-						foundNachname = false;
-						NachnameDone = true;
-					/*} else if (foundGmbH = true){
-						this.Nachname = zeile;
-						foundGmbH = false;
-						NachnameDone = true;*/
-					} else if (zeile.startsWith("Herrn") || zeile.startsWith("Frau") && NachnameDone == false) { //only once
-						foundNachname = true;
-					} /*else if (zeile.startsWith("An den") && NachnameDone == false) {
-						foundGmbH = true;
-					}*/
+					}
 					
 					if (zeile.startsWith("Leistung der")){
 						int end = zeile.indexOf("kWp");
