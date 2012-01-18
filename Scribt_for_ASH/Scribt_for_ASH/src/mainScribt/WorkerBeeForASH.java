@@ -30,6 +30,7 @@ public class WorkerBeeForASH {
 		
 		findFiles(pathToFiles);
 		
+		
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
 				
@@ -81,6 +82,9 @@ public class WorkerBeeForASH {
 	public void convertPdfToTxt(String filenamePDF) {
 		
         pdfTextParserObj = new PDFTextParser();
+        
+        pdfTextParserObj.setFolder(pathToFiles);
+        
         textContent = pdfTextParserObj.pdftoText(filenamePDF);
         
         System.out.println(textContent);
