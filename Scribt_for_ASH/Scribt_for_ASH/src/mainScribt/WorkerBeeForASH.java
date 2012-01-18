@@ -1,5 +1,6 @@
 package mainScribt;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -18,6 +19,8 @@ public class WorkerBeeForASH {
 	}
 	
 	public void work() {
+		
+		findFiles();
 		
 		convertPdfToTxt();
 		
@@ -58,5 +61,21 @@ public class WorkerBeeForASH {
         	
         }
     }
+	
+	private void findFiles() {
+		
+		File f;
+        
+		File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
+        File[] listOfFiles = folder.listFiles();
+        
+        int j = 0;
+        for (int i = 0; i < listOfFiles.length; i++) {
+        	if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
+        		System.out.println(listOfFiles[i]);
+        	}
+        }
+        
+	}
 	
 }
