@@ -1,15 +1,19 @@
 package mainScribt;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class WorkerBeeForASH {
 	
 	String textContent = "";
-	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/01-2011";
+	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/renameTest";
 //	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
 	parsePdf parser;
@@ -21,6 +25,11 @@ public class WorkerBeeForASH {
 	FileReader in;
 	FileWriter out;
 	
+	int count = 0;
+	// debug
+	int alreadyExisted = 0;
+	int single = 0;
+	
 	public WorkerBeeForASH() {
 		super();
 		work();
@@ -29,7 +38,6 @@ public class WorkerBeeForASH {
 	public void work() {
 		
 		findFiles(pathToFiles);
-		
 		
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
@@ -50,7 +58,8 @@ public class WorkerBeeForASH {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				result += parser.getNachname() + ";" + 
+				result += "NÖ" + ";" + 
+						parser.getNachname() + ";" + 
 		    			parser.getLeistung() + ";" + 
 		    			parser.getKennzahl() + ";" + 
 		    			parser.getDatum() + ";" + 
@@ -60,25 +69,83 @@ public class WorkerBeeForASH {
 				
 				// create new folder, copy files to that folder and rename them
 				
-//				File f = new File(pathToFiles + "/arrangedCopies");
-//				try{
-//					if(f.mkdir());
-//				}catch(Exception e){
-//					e.printStackTrace();
-//				}
-//				
-//				tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
-//						"_" + parser.getDatum() + ".pdf");
+				File f = new File(pathToFiles + "/arrangedCopies");
+				try{
+					if(f.mkdir());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 				
-			  }
-			
+				tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+						"_" + parser.getDatum() + ".pdf");
+				
 //				File oldFile = new File(pathToFiles);
 //				listOfFiles[i].renameTo(oldFile);
-//				
-//				listOfFiles[i].renameTo(tmpFile);
+				
+				// rename file and copy to to arrangedCopies folder if filename doesn't exist
+				if (!tmpFile.exists()) {
+					single++;
+					try {
+						copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+								"_" + parser.getDatum() + ".pdf"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} 
+				// if filname exists: put count into name. increase count until filname doesn't exist
+				else if (tmpFile.exists()) {
+					alreadyExisted ++;
+					String name = "";
+					boolean exists = true;
+					
+					while (exists) {
+						
+						count ++;
+						name = pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+								"(" + count + ")" + 
+								"_" + parser.getDatum() + ".pdf";
+						tmpFile = new File(name);
+						
+						if (tmpFile.exists()) {
+							exists = true;
+						} else {
+							exists = false;
+							count = 0;
+						}
+					}
+					try {
+						copy(pathToFiles + "//" + listOfFiles[i].getName(), name);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+//				try {
+//					copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+//							"_" + parser.getDatum() + ".pdf"));
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+				
+//				if (!tmpFile.exists()) {
+//					listOfFiles[i].renameTo(tmpFile);
+//				}
+//				else {
+//					while (tmpFile.exists()) {
+//						tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+//								"(" + count + ")" + 
+//								"_" + parser.getDatum() + ".pdf");
+//					}
+//					listOfFiles[i].renameTo(tmpFile);
+//				}
+				
+			}
 			
 		}
-
+		System.out.println("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
+				alreadyExisted + " Bescheide wurden umbenannt.\n" + 
+				"------------------------------------\n" + 
+				(single+alreadyExisted) + " Bescheide gesammt.");
 	}
 	
 	public void convertPdfToTxt(String filenamePDF) {
@@ -110,5 +177,85 @@ public class WorkerBeeForASH {
         listOfFiles = folder.listFiles();
         
 	}
+	
+	/**
+	 * copy a file 
+	 * 
+	 * @param fromFileName
+	 * @param toFileName
+	 * @throws IOException
+	 */
+	public static void copy(String fromFileName, String toFileName)
+		      throws IOException {
+		    File fromFile = new File(fromFileName);
+		    File toFile = new File(toFileName);
+
+		    if (!fromFile.exists())
+		      throw new IOException("FileCopy: " + "no such source file: "
+		          + fromFileName);
+		    if (!fromFile.isFile())
+		      throw new IOException("FileCopy: " + "can't copy directory: "
+		          + fromFileName);
+		    if (!fromFile.canRead())
+		      throw new IOException("FileCopy: " + "source file is unreadable: "
+		          + fromFileName);
+
+		    if (toFile.isDirectory())
+		      toFile = new File(toFile, fromFile.getName());
+
+		    if (toFile.exists()) {
+		      if (!toFile.canWrite())
+		        throw new IOException("FileCopy: "
+		            + "destination file is unwriteable: " + toFileName);
+		      System.out.print("Overwrite existing file " + toFile.getName()
+		          + "? (Y/N): ");
+		      System.out.flush();
+		      BufferedReader in = new BufferedReader(new InputStreamReader(
+		          System.in));
+		      String response = in.readLine();
+		      if (!response.equals("Y") && !response.equals("y"))
+		        throw new IOException("FileCopy: "
+		            + "existing file was not overwritten.");
+		    } else {
+		      String parent = toFile.getParent();
+		      if (parent == null)
+		        parent = System.getProperty("user.dir");
+		      File dir = new File(parent);
+		      if (!dir.exists())
+		        throw new IOException("FileCopy: "
+		            + "destination directory doesn't exist: " + parent);
+		      if (dir.isFile())
+		        throw new IOException("FileCopy: "
+		            + "destination is not a directory: " + parent);
+		      if (!dir.canWrite())
+		        throw new IOException("FileCopy: "
+		            + "destination directory is unwriteable: " + parent);
+		    }
+
+		    FileInputStream from = null;
+		    FileOutputStream to = null;
+		    try {
+		      from = new FileInputStream(fromFile);
+		      to = new FileOutputStream(toFile);
+		      byte[] buffer = new byte[4096];
+		      int bytesRead;
+
+		      while ((bytesRead = from.read(buffer)) != -1)
+		        to.write(buffer, 0, bytesRead); // write
+		    } finally {
+		      if (from != null)
+		        try {
+		          from.close();
+		        } catch (IOException e) {
+		          ;
+		        }
+		      if (to != null)
+		        try {
+		          to.close();
+		        } catch (IOException e) {
+		          ;
+		        }
+		    }
+		  }
 	
 }
