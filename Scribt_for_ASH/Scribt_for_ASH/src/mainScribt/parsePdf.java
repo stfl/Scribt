@@ -4,17 +4,20 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 
 public class parsePdf {
 	
-	private String Nachname;
+	private String Nachname = "";
 	private String Datum;
 	private String Kennzahl;
 	private String Leistung;
 	private String inputString;
+	private String LeistungNeu;
+	private String LeistungAlt;
 
 		public parsePdf()
 		{
@@ -83,7 +86,7 @@ public class parsePdf {
 								this.Nachname = zeile.substring(zeile.indexOf("Gemeinde"));
 								NachnameDone = true;
 							} else foundGmbH = true;
-						} else if (zeile.startsWith("Gemeinde") || zeile.startsWith("Bundesgymnasium")) {
+						} else if (zeile.startsWith("Gemeinde") || zeile.startsWith("Bundesgymnasium") || zeile.startsWith("Marktgemeinde")) {
 								this.Nachname = zeile;
 								NachnameDone = true;
 						}
@@ -91,7 +94,7 @@ public class parsePdf {
 					
 					if (zeile.startsWith("Leistung der")){
 						int end = zeile.indexOf("kWp");
-						if (end != -1) {
+						if (end != 1) {
 							int begin = zeile.substring(0, end-3).lastIndexOf(" ");
 							this.Leistung = zeile.substring(begin+1, end-1);
 						}
@@ -121,7 +124,36 @@ public class parsePdf {
 			}
 			
 			if (this.Leistung == null) {
-				
+				//System.out.println("\t\tchecking for Änderungungsbescheid");
+				Pattern MY_PATTERN = Pattern.compile("mit[\n ]?+[0-9]+[,]?[0-9]*[\n ]?+kWp[\n ]?+neu[\n ]?+festgesetzt");
+				Matcher m = MY_PATTERN.matcher(inputString);
+				String s = "";
+				while (m.find()) {
+				    s = m.group(0);
+				    System.out.println(s);
+				    break;
+				}
+				int end = s.indexOf("kWp");
+				if (end != 1) {
+					this.LeistungNeu = s.substring(4, end-1);
+					this.Leistung = "";
+					
+					MY_PATTERN = Pattern.compile("[0-9]+[,]?[0-9]* kWp, Einspeisezählpunkt");
+					m = MY_PATTERN.matcher(inputString);
+					s = "";
+					while (m.find()) {
+					    s = m.group(0);
+					    System.out.println(s);
+					    break;
+					}
+					end = s.indexOf("kWp");
+					if (end >= 1) {
+						this.LeistungAlt = s.substring(0, end-1);
+					}
+				}
+								
+				// Leistung alt: "Die Nennleistung der Wechselrichter beträgt: 1 x 4,6 kW und 5 x 3,4 kW"
+				//dem Anlagenteil mit einer Leistung von 6,45 kWp, Einspeisezählpunkt
 			}
 		}	
 
@@ -142,5 +174,12 @@ public class parsePdf {
 			return Leistung;
 		}
 		
+		public String getLeistungNeu() {
+			return LeistungNeu;
+		}
+		
+		public String getLeistungAlt() {
+			return LeistungAlt;
+		}
 	
 }
