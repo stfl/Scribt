@@ -6,7 +6,7 @@ import java.io.IOException;
 public class WorkerBeeForASH {
 	
 	String textContent = "";
-	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_7.pdf";
+	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
 	parsePdf parser;
 	PDFTextParser pdfTextParserObj;
@@ -25,10 +25,11 @@ public class WorkerBeeForASH {
 		parser.setString(textContent);
 		try {
 			parser.parse();
-			System.out.println("Datum: " + parser.getDatum() + "\n" + 
-					"Kennzahl: " + parser.getKennzahl() + "\n" + 
-					"Leistung: " + parser.getLeistung() + " kWh\n" + 
-					"Nachname: " + parser.getNachname() + "\n\n");
+			System.out.println(filenamePDF + "\n" +
+					"Datum: " + parser.getDatum() + "\t" + 
+					"Kennzahl: " + parser.getKennzahl() + "\t" + 
+					"Leistung: " + parser.getLeistung() + " kWp\t" + 
+					"Nachname: " + parser.getNachname() + "\t\n");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
