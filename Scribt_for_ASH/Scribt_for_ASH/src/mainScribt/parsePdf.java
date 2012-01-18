@@ -4,15 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.regex.Pattern;
 
 
 
 public class parsePdf {
 	
-	private String Nachname;
-	private String Datum;
-	private String Kennzahl;
-	private String Leistung;
+	private String Nachname = "";
+	private String Datum = "";
+	private String Kennzahl = "";
+	private String Leistung = "";
 	private String inputString;
 
 		public parsePdf()
@@ -37,8 +38,9 @@ public class parsePdf {
 			try {
 				BufferedReader in = new BufferedReader(new StringReader(inputString));
 				String zeile = null;
+				String zeile_old = "";
+				String buffer = "";
 				while ((zeile = in.readLine()) != null) {
-					
 					//System.out.println("NachnameDone = " + NachnameDone + " foundNachname: " + foundNachname + " foundGmbH: " + foundGmbH);
 					if (NachnameDone == false) {
 						if (foundNachname == true) {
@@ -55,20 +57,31 @@ public class parsePdf {
 							} else {
 								this.Nachname = zeileArray[i];
 							}
-							foundNachname = false;
+							//foundNachname = false;
 							NachnameDone = true;
 							
 						} else if (foundGmbH == true){
-							this.Nachname = zeile;
-							foundGmbH = false;
-							NachnameDone = true;
+							if(!Pattern.matches("^[0-9]{4}+.*" ,zeile)) {	//Findet PLZ
+								System.out.println(zeile + "found PLZ");
+								buffer += zeile_old;
+							} else {
+								this.Nachname = buffer;
+								NachnameDone = true;
+							}							
+							zeile_old = zeile;
 							
 						} else if (zeile.startsWith("Herrn") || zeile.startsWith("Frau") && foundNachname == false) { //only once
 							foundNachname = true;
 							
-						} else if (zeile.startsWith("An den") && foundGmbH == false) {
-							foundGmbH = true;
-							System.out.println("foundgmbh");
+						} else if (zeile.startsWith("An den") || zeile.startsWith("An die") && foundGmbH == false) {
+							if (zeile.startsWith("An die Gemeinde")) {		// Sonderfall von "An die"
+								this.Nachname = zeile.substring(zeile.indexOf("Gemeinde"));
+								NachnameDone = true;
+							} else foundGmbH = true;
+							
+						} else if (zeile.startsWith("Gemeinde")) {
+							this.Nachname = zeile;
+							NachnameDone = true;
 						}
 					}
 					
@@ -90,6 +103,7 @@ public class parsePdf {
 						foundDatum = false;
 						DatumDone = true;
 					}
+					
 					if (zeile.endsWith("Datum ") && DatumDone == false){	//only once
 						foundDatum = true;
 					}
