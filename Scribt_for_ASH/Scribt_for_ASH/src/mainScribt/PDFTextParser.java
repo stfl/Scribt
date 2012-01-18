@@ -46,7 +46,7 @@ public class PDFTextParser {
         /**
          * TODO dynamic path
          */
-        File folder = new File("U:/Ökostromdecklung - OSD Team Liste/Scribt_for_ASH/Scribt_for_ASH/files");
+        File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
         File[] listOfFiles = folder.listFiles();
 
         // list all files - serch for file name
