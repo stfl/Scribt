@@ -26,6 +26,9 @@ public class WorkerBeeForASH {
 	FileWriter out;
 	
 	int count = 0;
+	// debug
+	int alreadyExisted = 0;
+	int single = 0;
 	
 	public WorkerBeeForASH() {
 		super();
@@ -35,7 +38,6 @@ public class WorkerBeeForASH {
 	public void work() {
 		
 		findFiles(pathToFiles);
-		
 		
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].getName().toLowerCase().endsWith("pdf")) {
@@ -56,7 +58,8 @@ public class WorkerBeeForASH {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				result += parser.getNachname() + ";" + 
+				result += "Bundesland" + 
+						parser.getNachname() + ";" + 
 		    			parser.getLeistung() + ";" + 
 		    			parser.getKennzahl() + ";" + 
 		    			parser.getDatum() + ";" + 
@@ -81,7 +84,7 @@ public class WorkerBeeForASH {
 				
 				// rename file and copy to to arrangedCopies folder if filename doesn't exist
 				if (!tmpFile.exists()) {
-					
+					single++;
 					try {
 						copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
 								"_" + parser.getDatum() + ".pdf"));
@@ -90,7 +93,8 @@ public class WorkerBeeForASH {
 					}
 				} 
 				// if filname exists: put count into name. increase count until filname doesn't exist
-				else {
+				else if (tmpFile.exists()) {
+					alreadyExisted ++;
 					String name = "";
 					boolean exists = true;
 					
@@ -138,7 +142,10 @@ public class WorkerBeeForASH {
 			}
 			
 		}
-		System.out.println("Done.");
+		System.out.println("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
+				alreadyExisted + " Bescheide wurden umbenannt.\n" + 
+				"------------------------------------\n" + 
+				(single+alreadyExisted) + " Bescheide gesammt.");
 	}
 	
 	public void convertPdfToTxt(String filenamePDF) {
@@ -171,6 +178,13 @@ public class WorkerBeeForASH {
         
 	}
 	
+	/**
+	 * copy a file 
+	 * 
+	 * @param fromFileName
+	 * @param toFileName
+	 * @throws IOException
+	 */
 	public static void copy(String fromFileName, String toFileName)
 		      throws IOException {
 		    File fromFile = new File(fromFileName);
