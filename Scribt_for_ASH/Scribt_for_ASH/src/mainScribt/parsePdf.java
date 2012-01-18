@@ -62,7 +62,7 @@ public class parsePdf {
 							
 						} else if (foundGmbH == true){
 							if(!Pattern.matches("^[0-9]{4}+.*" ,zeile)) {	//Findet PLZ
-								System.out.println(zeile + "found PLZ");
+								//System.out.println(zeile + "found PLZ");
 								buffer += zeile_old;
 							} else {
 								this.Nachname = buffer;
