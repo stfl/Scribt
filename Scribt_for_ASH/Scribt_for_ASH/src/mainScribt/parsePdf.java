@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 
 public class parsePdf {
 	
-	private String Nachname = "";
-	private String Datum = "";
-	private String Kennzahl = "";
-	private String Leistung = "";
+	private String Nachname;
+	private String Datum;
+	private String Kennzahl;
+	private String Leistung;
 	private String inputString;
 
 		public parsePdf()
