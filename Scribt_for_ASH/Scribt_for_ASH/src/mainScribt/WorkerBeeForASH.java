@@ -6,7 +6,7 @@ import java.io.IOException;
 public class WorkerBeeForASH {
 	
 	String textContent = "";
-	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/Scribt_for_ASH/Scribt_for_ASH/files//Anschreiben_7.pdf";
+	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_7.pdf";
 	
 	parsePdf parser;
 	PDFTextParser pdfTextParserObj;
@@ -40,7 +40,7 @@ public class WorkerBeeForASH {
     			parser.getLeistung() + ";" + 
     			parser.getKennzahl() + ";" + 
     			parser.getDatum();
-		pdfTextParserObj.writeTexttoFile(result, "U:/Ökostromdecklung - OSD Team Liste/Scribt_for_ASH/Scribt_for_ASH/files//result.csv");
+		pdfTextParserObj.writeTexttoFile(result, "U:/Ökostromdecklung - OSD Team Liste/ASH_files//result.csv");
 	}
 	
 	public void convertPdfToTxt() {
