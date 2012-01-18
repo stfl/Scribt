@@ -25,10 +25,10 @@ public class WorkerBeeForASH {
 		parser.setString(textContent);
 		try {
 			parser.parse();
-			/*System.out.println(parser.getDatum() + "\n" + 
+			System.out.println(parser.getDatum() + "\n" + 
 					parser.getKennzahl() + "\n" + 
 					parser.getLeistung() + "\n" + 
-					parser.getNachname() + "\n\n");*/
+					parser.getNachname() + "\n\n");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,7 +40,7 @@ public class WorkerBeeForASH {
     			parser.getLeistung() + ";" + 
     			parser.getKennzahl() + ";" + 
     			parser.getDatum();
-		pdfTextParserObj.writeTexttoFile(result, "U:/Ökostromdecklung - OSD Team Liste/ASH_files//result.csv");
+		pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
 	}
 	
 	public void convertPdfToTxt() {
