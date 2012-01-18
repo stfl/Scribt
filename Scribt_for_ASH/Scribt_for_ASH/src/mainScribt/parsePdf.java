@@ -50,8 +50,10 @@ public class parsePdf {
 								if (zeileArray[0].toLowerCase().equals(excludeTitles[j]) || zeileArray[0].toLowerCase().equals(excludeTitles[j]+".")) {
 									i++;
 								}
-								if (zeileArray[i].equals("und")) i+=2;
 							}
+							if (zeileArray.length >= i+1) {
+								if (zeileArray[i].equals("und")) i+=2;
+							} 
 							if (zeileArray.length < i+1) {
 								System.out.println("_NO_ Nachname found\n");
 							} else {
@@ -61,7 +63,10 @@ public class parsePdf {
 							NachnameDone = true;
 							
 						} else if (foundGmbH == true){
-							if(!Pattern.matches("^[0-9]{4}+.*" ,zeile)) {	//Findet PLZ
+							if (zeile.startsWith("Gemeinde")) {
+								this.Nachname = zeile;
+								NachnameDone = true;
+							} else if(!Pattern.matches("^[0-9]{4}+.*" ,zeile)) {	//Findet PLZ
 								//System.out.println(zeile + "found PLZ");
 								buffer += zeile_old;
 							} else {
@@ -78,16 +83,15 @@ public class parsePdf {
 								this.Nachname = zeile.substring(zeile.indexOf("Gemeinde"));
 								NachnameDone = true;
 							} else foundGmbH = true;
-							
-						} else if (zeile.startsWith("Gemeinde")) {
-							this.Nachname = zeile;
-							NachnameDone = true;
+						} else if (zeile.startsWith("Gemeinde") || zeile.startsWith("Bundesgymnasium")) {
+								this.Nachname = zeile;
+								NachnameDone = true;
 						}
 					}
 					
 					if (zeile.startsWith("Leistung der")){
 						int end = zeile.indexOf("kWp");
-						if (zeile.length() >= 4) {
+						if (end != -1) {
 							int begin = zeile.substring(0, end-3).lastIndexOf(" ");
 							this.Leistung = zeile.substring(begin+1, end-1);
 						}
@@ -114,6 +118,10 @@ public class parsePdf {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			if (this.Leistung == null) {
+				
 			}
 		}	
 
