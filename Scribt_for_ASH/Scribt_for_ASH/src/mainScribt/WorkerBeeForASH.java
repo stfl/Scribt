@@ -53,7 +53,9 @@ public class WorkerBeeForASH {
 				result += parser.getNachname() + ";" + 
 		    			parser.getLeistung() + ";" + 
 		    			parser.getKennzahl() + ";" + 
-		    			parser.getDatum() + "\n";
+		    			parser.getDatum() + ";" + 
+		    			listOfFiles[i].getName() +
+		    			"\n";
 				pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
 				
 				// create new folder, copy files to that folder and rename them
