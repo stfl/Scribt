@@ -87,8 +87,6 @@ public class WorkerBeeForASH {
         
         textContent = pdfTextParserObj.pdftoText(filenamePDF);
         
-        System.out.println(textContent);
-        
         if (textContent == null) {
         	System.out.println("PDF to Text Conversion failed.");
         }
