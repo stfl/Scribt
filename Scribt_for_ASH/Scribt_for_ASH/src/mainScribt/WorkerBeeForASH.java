@@ -58,7 +58,7 @@ public class WorkerBeeForASH {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				result += "Bundesland" + 
+				result += "NÖ" + ";" + 
 						parser.getNachname() + ";" + 
 		    			parser.getLeistung() + ";" + 
 		    			parser.getKennzahl() + ";" + 
