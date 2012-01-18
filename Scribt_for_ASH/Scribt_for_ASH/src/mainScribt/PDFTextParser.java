@@ -33,8 +33,14 @@ public class PDFTextParser {
     COSDocument cosDoc;
     PDDocumentInformation pdDocInfo;
     
+    File folder;
+    
     // PDFTextParser Constructor 
     public PDFTextParser() {
+    }
+    
+    public void setFolder(String f) {
+    	folder = new File(f);
     }
     
     // Extract text from PDF Document
@@ -43,7 +49,7 @@ public class PDFTextParser {
         System.out.println("Parsing text from PDF file " + fileName + "....");
         File f = new File(fileName);
         
-        File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
+        
         File[] listOfFiles = folder.listFiles();
 
         // list all files - serch for file name

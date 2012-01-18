@@ -9,8 +9,8 @@ import java.io.IOException;
 public class WorkerBeeForASH {
 	
 	String textContent = "";
-	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files";
-	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
+	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/01-2011";
+//	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
 	parsePdf parser;
 	PDFTextParser pdfTextParserObj;
@@ -55,52 +55,35 @@ public class WorkerBeeForASH {
 		    			parser.getDatum() + "\n";
 				pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
 				
-				File f = new File(pathToFiles + "/arrangedCopies");
-				try{
-					if(f.mkdir());
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+				// create new folder, copy files to that folder and rename them
 				
-				tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
-						"_" + parser.getDatum() + ".pdf");
+//				File f = new File(pathToFiles + "/arrangedCopies");
+//				try{
+//					if(f.mkdir());
+//				}catch(Exception e){
+//					e.printStackTrace();
+//				}
+//				
+//				tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+//						"_" + parser.getDatum() + ".pdf");
 				
-				// rename
-				
-				try {
-					in = new FileReader(listOfFiles[i]);
-					out = new FileWriter(tmpFile);
-				    int c;
-
-				    while ((c = in.read()) != -1) {
-				      out.write(c);
-
-				    
-				    }
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			    
 			  }
 			
+//				File oldFile = new File(pathToFiles);
+//				listOfFiles[i].renameTo(oldFile);
+//				
 //				listOfFiles[i].renameTo(tmpFile);
-				
+			
 		}
-		try {
-			in.close();
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	    
+
 	}
 	
 	public void convertPdfToTxt(String filenamePDF) {
 		
         pdfTextParserObj = new PDFTextParser();
         textContent = pdfTextParserObj.pdftoText(filenamePDF);
+        
+        System.out.println(textContent);
         
         if (textContent == null) {
         	System.out.println("PDF to Text Conversion failed.");
@@ -121,6 +104,7 @@ public class WorkerBeeForASH {
 //		File folder = new File("U:/Ökostromdecklung - OSD Team Liste/ASH_files");
 		File folder = new File(path);
         listOfFiles = folder.listFiles();
+        
 	}
 	
 }
