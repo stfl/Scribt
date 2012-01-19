@@ -18,7 +18,7 @@ public class WorkerBeeForASH {
 	
 	parsePdf parser;
 	PDFTextParser pdfTextParserObj;
-	String result;
+	String result = "";
 	
 	File[] listOfFiles;
 	File tmpFile;
@@ -89,62 +89,44 @@ public class WorkerBeeForASH {
 //				listOfFiles[i].renameTo(oldFile);
 				
 				// rename file and copy to to arrangedCopies folder if filename doesn't exist
-				if (!tmpFile.exists()) {
-					single++;
-					try {
-						copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
-								"_" + parser.getDatum() + ".pdf"));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				} 
-				// if filname exists: put count into name. increase count until filname doesn't exist
-				else if (tmpFile.exists()) {
-					alreadyExisted ++;
-					String name = "";
-					boolean exists = true;
-					
-					while (exists) {
+				if (gui.getUmbenennen()) {
+					if (!tmpFile.exists()) {
+						single++;
+						try {
+							copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+									"_" + parser.getDatum() + ".pdf"));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} 
+					// if filname exists: put count into name. increase count until filname doesn't exist
+					else if (tmpFile.exists()) {
+						alreadyExisted ++;
+						String name = "";
+						boolean exists = true;
 						
-						count ++;
-						name = pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
-								"(" + count + ")" + 
-								"_" + parser.getDatum() + ".pdf";
-						tmpFile = new File(name);
-						
-						if (tmpFile.exists()) {
-							exists = true;
-						} else {
-							exists = false;
-							count = 0;
+						while (exists) {
+							
+							count ++;
+							name = pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+									"(" + count + ")" + 
+									"_" + parser.getDatum() + ".pdf";
+							tmpFile = new File(name);
+							
+							if (tmpFile.exists()) {
+								exists = true;
+							} else {
+								exists = false;
+								count = 0;
+							}
+						}
+						try {
+							copy(pathToFiles + "//" + listOfFiles[i].getName(), name);
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
 					}
-					try {
-						copy(pathToFiles + "//" + listOfFiles[i].getName(), name);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
-				
-//				try {
-//					copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
-//							"_" + parser.getDatum() + ".pdf"));
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-				
-//				if (!tmpFile.exists()) {
-//					listOfFiles[i].renameTo(tmpFile);
-//				}
-//				else {
-//					while (tmpFile.exists()) {
-//						tmpFile = new File(pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
-//								"(" + count + ")" + 
-//								"_" + parser.getDatum() + ".pdf");
-//					}
-//					listOfFiles[i].renameTo(tmpFile);
-//				}
-				
 			}
 			
 		}
