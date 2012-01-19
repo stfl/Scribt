@@ -131,7 +131,7 @@ public class parsePdf {
 				String s = "";
 				while (m.find()) {
 				    s = m.group(0);
-				    System.out.println(s);
+				   // System.out.println(s);
 				    break;
 				}
 				int end = s.indexOf("kWp");
@@ -144,13 +144,13 @@ public class parsePdf {
 					s = "";
 					while (m.find()) {
 					    s = m.group(0);
-					    System.out.println(s);
+					    //System.out.println(s);
 					    break;
 					}
 					end = s.indexOf("kWp");
 					if (end >= 1) {
 						this.LeistungAlt = s.substring(0, end-1);
-						this.Differenz = Float.parseFloat(LeistungNeu) - Float.parseFloat(LeistungAlt);
+						this.Differenz = Float.parseFloat(LeistungNeu.replace(',', '.')) - Float.parseFloat(LeistungAlt.replace(',', '.'));
 					}
 				}
 								
@@ -185,11 +185,13 @@ public class parsePdf {
 		}
 		
 		public String getDifferenz() {
-			return abs(this.Differenz).toString();
+			if (this.Differenz == 0) return "";
+			else return abs(this.Differenz).toString().replace('.', ',');
 		}
 		
 		public String getErweiterung() {
-			if (this.Differenz > 0) return "Erweiterung";
+			if (this.Differenz == 0) return "";
+			else if (this.Differenz > 0) return "Erweiterung";
 			else return "Reduzierung";
 		}
 		
