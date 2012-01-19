@@ -18,6 +18,7 @@ public class parsePdf {
 	private String inputString;
 	private String LeistungNeu;
 	private String LeistungAlt;
+	private float Differenz = 0;
 
 		public parsePdf()
 		{
@@ -149,6 +150,7 @@ public class parsePdf {
 					end = s.indexOf("kWp");
 					if (end >= 1) {
 						this.LeistungAlt = s.substring(0, end-1);
+						this.Differenz = Float.parseFloat(LeistungNeu) - Float.parseFloat(LeistungAlt);
 					}
 				}
 								
@@ -180,6 +182,22 @@ public class parsePdf {
 		
 		public String getLeistungAlt() {
 			return LeistungAlt;
+		}
+		
+		public String getDifferenz() {
+			return abs(this.Differenz).toString();
+		}
+		
+		public String getErweiterung() {
+			if (this.Differenz > 0) return "Erweiterung";
+			else return "Reduzierung";
+		}
+		
+		private Float abs(float diff) {
+			if (diff  < 0) {
+				diff *= -1;
+			}
+			return diff;
 		}
 	
 }
