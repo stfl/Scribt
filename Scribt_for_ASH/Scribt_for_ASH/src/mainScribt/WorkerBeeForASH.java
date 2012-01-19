@@ -52,7 +52,9 @@ public class WorkerBeeForASH {
 							"Datum: " + parser.getDatum() + "\t" + 
 							"Kennzahl: " + parser.getKennzahl() + "\t" + 
 							"Leistung: " + parser.getLeistung() + " kWp\t" + 
-							"Nachname: " + parser.getNachname() + "\t\n");
+							"Nachname: " + parser.getNachname() + "\t" +
+							"Differenz: " + parser.getDifferenz() + " " + parser.getErweiterung() +							
+							"\n");
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
