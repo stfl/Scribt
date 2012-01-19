@@ -55,7 +55,7 @@ public class WorkerBeeForASH {
 							"Leistung: " + parser.getLeistung() + " kWp\t" + 
 							"LeistungNeu: " + parser.getLeistungNeu() + " kWp\t" +
 							"Differenz: " + parser.getDifferenz() + " " + parser.getErweiterung() +							
-							"\n");
+							"\n\n");
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -63,9 +63,12 @@ public class WorkerBeeForASH {
 				}
 				result += "NÖ" + ";" + 
 						parser.getNachname() + ";" + 
+						parser.getDatum() + ";" + 
+						parser.getKennzahl() + ";" + 
 		    			parser.getLeistung() + ";" + 
-		    			parser.getKennzahl() + ";" + 
-		    			parser.getDatum() + ";" + 
+		    			parser.getDifferenz() + ";" + 
+		    			parser.getErweiterung() + ";" + 
+		    			parser.getLeistungNeu() + ";" + 
 		    			listOfFiles[i].getName() +
 		    			"\n";
 				pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
