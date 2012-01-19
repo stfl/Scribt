@@ -12,12 +12,12 @@ import java.util.regex.Pattern;
 public class parsePdf {
 	
 	private String Nachname = "";
-	private String Datum;
-	private String Kennzahl;
-	private String Leistung;
-	private String inputString;
-	private String LeistungNeu;
-	private String LeistungAlt;
+	private String Datum = "";
+	private String Kennzahl = "";
+	private String Leistung = "";
+	private String inputString = "";
+	private String LeistungNeu = "";
+	private String LeistungAlt = "";
 	private float Differenz = 0;
 
 		public parsePdf()
