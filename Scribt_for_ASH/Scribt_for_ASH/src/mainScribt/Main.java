@@ -9,8 +9,8 @@ public class Main {
 	public static void main(String[] args) {
 
 
-		@SuppressWarnings("unused")
-		WorkerBeeForASH workerBee = new WorkerBeeForASH();
+//		@SuppressWarnings("unused")
+//		WorkerBeeForASH workerBee = new WorkerBeeForASH();
 
 		// TODO Auto-generated method stub
 		/*try {
