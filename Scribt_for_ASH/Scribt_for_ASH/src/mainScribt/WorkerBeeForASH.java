@@ -10,7 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import ashGui.ASH_JFrame;
+
 public class WorkerBeeForASH {
+	
+	private static WorkerBeeForASH  workerBee = null;
 	
 	String textContent = "";
 	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/01-2011";
@@ -30,9 +34,12 @@ public class WorkerBeeForASH {
 	int alreadyExisted = 0;
 	int single = 0;
 	
-	public WorkerBeeForASH() {
-		super();
-		work();
+	// Singelteon Pattern
+	public static WorkerBeeForASH instance() {
+		if (workerBee == null) {
+			workerBee = new WorkerBeeForASH();
+		}
+		return workerBee;
 	}
 	
 	public void work() {
@@ -49,6 +56,14 @@ public class WorkerBeeForASH {
 				try {
 					parser.parse();
 					System.out.print(listOfFiles[i] + "\n" +
+							"Nachname: " + parser.getNachname() + "\t" +
+							"Datum: " + parser.getDatum() + "\t" + 
+							"Kennzahl: " + parser.getKennzahl() + "\n" + 
+							"Leistung: " + parser.getLeistung() + " kWp\t" + 
+							"LeistungNeu: " + parser.getLeistungNeu() + " kWp\t" +
+							"Differenz: " + parser.getDifferenz() + " " + parser.getErweiterung() +							
+							"\n\n");
+					ASH_JFrame.instance().getContentPane().setOutput(listOfFiles[i] + "\n" +
 							"Nachname: " + parser.getNachname() + "\t" +
 							"Datum: " + parser.getDatum() + "\t" + 
 							"Kennzahl: " + parser.getKennzahl() + "\n" + 
@@ -89,7 +104,7 @@ public class WorkerBeeForASH {
 //				listOfFiles[i].renameTo(oldFile);
 				
 				// rename file and copy to to arrangedCopies folder if filename doesn't exist
-				if (gui.getUmbenennen()) {
+				if (ASH_JFrame.instance().getUmbenennen()) {
 					if (!tmpFile.exists()) {
 						single++;
 						try {
@@ -130,6 +145,11 @@ public class WorkerBeeForASH {
 			}
 			
 		}
+		ASH_JFrame.instance().getContentPane().setOutput("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
+				alreadyExisted + " Bescheide wurden umbenannt.\n" + 
+				"------------------------------------\n" + 
+				(single+alreadyExisted) + " Bescheide gesammt.");
+		
 		System.out.println("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
 				alreadyExisted + " Bescheide wurden umbenannt.\n" + 
 				"------------------------------------\n" + 
@@ -245,5 +265,13 @@ public class WorkerBeeForASH {
 		        }
 		    }
 		  }
+
+	public String getPathToFiles() {
+		return pathToFiles;
+	}
+
+	public void setPathToFiles(String pathToFiles) {
+		this.pathToFiles = pathToFiles;
+	}
 	
 }

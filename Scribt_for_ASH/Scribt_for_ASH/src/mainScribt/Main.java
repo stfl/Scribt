@@ -1,5 +1,7 @@
 package mainScribt;
 
+import ashGui.ASH_JFrame;
+
 
 public class Main {
 
@@ -8,9 +10,10 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-
-		@SuppressWarnings("unused")
-		WorkerBeeForASH workerBee = new WorkerBeeForASH();
+		ASH_JFrame.instance();
+		
+//		@SuppressWarnings("unused")
+//		WorkerBeeForASH workerBee = new WorkerBeeForASH();
 
 		// TODO Auto-generated method stub
 		/*try {
