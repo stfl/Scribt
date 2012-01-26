@@ -135,14 +135,18 @@ public class WorkerBeeForASH implements Runnable {
 							e.printStackTrace();
 						}
 					}
+					ASH_JFrame.instance().getContentPane().setOutput("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
+							alreadyExisted + " Bescheide wurden umbenannt.\n" + 
+							"------------------------------------\n" + 
+							(single+alreadyExisted) + " Bescheide gesammt.");
+				}
+				else {
+					ASH_JFrame.instance().getContentPane().setOutput("Done");
 				}
 			}
 			
 		}
-		ASH_JFrame.instance().getContentPane().setOutput("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
-				alreadyExisted + " Bescheide wurden umbenannt.\n" + 
-				"------------------------------------\n" + 
-				(single+alreadyExisted) + " Bescheide gesammt.");
+		
 		
 	}
 	
