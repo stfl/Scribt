@@ -21,7 +21,8 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 	
 	private boolean anableStartButton = false;
 	private boolean sorceSelected = false;
-	private boolean destinationSelected = true;
+	private boolean destinationSelected = false;
+	private boolean rename = false;
 	
 	public ASH_Panel1() {
 		
@@ -85,7 +86,13 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 	 */
 	public void setSorceSelected(boolean sorceSelected) {
 		this.sorceSelected = sorceSelected;
-		if (this.destinationSelected == true) {
+		if (rename) {
+			if (this.destinationSelected == true) {
+				this.anableStartButton = true;
+				this.startButton.setEnabled(true);
+			}
+		}
+		else {
 			this.anableStartButton = true;
 			this.startButton.setEnabled(true);
 		}
@@ -99,9 +106,11 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 	 */
 	public void setDestinationSelected(boolean destinationSelected) {
 		this.destinationSelected = destinationSelected;
-		if (this.sorceSelected == true) {
-			this.anableStartButton = true;
-			this.startButton.setEnabled(true);
+		if (rename) {
+			if (this.sorceSelected == true) {
+				this.anableStartButton = true;
+				this.startButton.setEnabled(true);
+			}
 		}
 	}
 	
@@ -115,6 +124,14 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 			this.setOutput("starting...");
 			new Thread(ASH_JFrame.instance().getWorkerBee()).start();
 		}
+	}
+
+	public boolean isRename() {
+		return rename;
+	}
+
+	public void setRename(boolean rename) {
+		this.rename = rename;
 	}
 	
 }

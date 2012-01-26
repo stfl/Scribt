@@ -16,6 +16,7 @@ public class WorkerBeeForASH implements Runnable {
 	
 	String textContent = "";
 	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/01-2011";
+	String pathToDestinationFiles = "";
 //	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
 	parsePdf parser;
@@ -79,7 +80,7 @@ public class WorkerBeeForASH implements Runnable {
 		    			parser.getLeistungNeu() + ";" + 
 		    			listOfFiles[i].getName() +
 		    			"\n";
-				pdfTextParserObj.writeTexttoFile(result, "C:/ASH_temp//result.csv");
+				pdfTextParserObj.writeTexttoFile(result, this.pathToFiles + "//result.csv");
 				
 				// create new folder, copy files to that folder and rename them
 				
@@ -101,7 +102,7 @@ public class WorkerBeeForASH implements Runnable {
 					if (!tmpFile.exists()) {
 						single++;
 						try {
-							copy(pathToFiles + "//" + listOfFiles[i].getName(), (pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+							copy(pathToFiles + "//" + listOfFiles[i].getName(), (this.pathToDestinationFiles + "//" + parser.getNachname() + 
 									"_" + parser.getDatum() + ".pdf"));
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -116,7 +117,7 @@ public class WorkerBeeForASH implements Runnable {
 						while (exists) {
 							
 							count ++;
-							name = pathToFiles + "/arrangedCopies//" + parser.getNachname() + 
+							name = pathToDestinationFiles + "//" + parser.getNachname() + 
 									"(" + count + ")" + 
 									"_" + parser.getDatum() + ".pdf";
 							tmpFile = new File(name);
@@ -143,10 +144,6 @@ public class WorkerBeeForASH implements Runnable {
 				"------------------------------------\n" + 
 				(single+alreadyExisted) + " Bescheide gesammt.");
 		
-		System.out.println("Done. \n" + single + " Bescheide waren eindeutig, \n" + 
-				alreadyExisted + " Bescheide wurden umbenannt.\n" + 
-				"------------------------------------\n" + 
-				(single+alreadyExisted) + " Bescheide gesammt.");
 	}
 	
 	public void convertPdfToTxt(String filenamePDF) {
@@ -265,6 +262,14 @@ public class WorkerBeeForASH implements Runnable {
 
 	public void setPathToFiles(String pathToFiles) {
 		this.pathToFiles = pathToFiles;
+	}
+
+	public String getPathToDestinationFiles() {
+		return pathToDestinationFiles;
+	}
+
+	public void setPathToDestinationFiles(String pathToDestinationFiles) {
+		this.pathToDestinationFiles = pathToDestinationFiles;
 	}
 
 	@Override

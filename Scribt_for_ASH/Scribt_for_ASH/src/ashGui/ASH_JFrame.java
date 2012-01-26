@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import mainScribt.WorkerBeeForASH;
@@ -27,15 +28,20 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 	JMenuBar menuBar;
 	JMenu dateiMenu;
 	JMenu helpMenu;
+	JMenu editMenu;
 	
 	JMenuItem exitItem;
 	JMenuItem helpItem;
+	JMenuItem preferencesItem;
 	
 	JMenuItem selectSorceItem;
 	JMenuItem selectDestItem;
 	
 	final JFileChooser fileChooser = new JFileChooser();
 	WorkerBeeForASH workerBee = new WorkerBeeForASH();
+	
+	// Preferences
+	PreferencesFrame prefFrame = new PreferencesFrame();
 	
 	public ASH_JFrame() {
 		
@@ -50,6 +56,9 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 		// initialize fileChooser
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
+		contentPane = new ASH_Panel1();
+		this.setContentPane(contentPane);
+		
 		//Create the menu bar.
 		menuBar = new JMenuBar();
 		menuBar.setPreferredSize(new Dimension(400, 20));
@@ -60,6 +69,13 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 		dateiMenu.getAccessibleContext().setAccessibleDescription(
 		        "The only menu in this program that has menu items");
 		menuBar.add(dateiMenu);
+		
+		// build the edit menu
+		editMenu = new JMenu("Edit");
+		editMenu.setMnemonic(KeyEvent.VK_A);
+		editMenu.getAccessibleContext().setAccessibleDescription(
+		        "Edut Menu");
+		menuBar.add(editMenu);
 		
 		// build the help menu
 		helpMenu = new JMenu("Help");
@@ -86,6 +102,16 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 		selectDestItem.getAccessibleContext().setAccessibleDescription("Opens Filechooser");
 		selectDestItem.addActionListener(this);
 		selectDestItem.setActionCommand("destination");
+		if (!contentPane.isRename()) {
+			selectDestItem.setEnabled(false);
+		}
+		
+		// help Item
+		preferencesItem = new JMenuItem("Preferences", KeyEvent.VK_T);
+		preferencesItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, ActionEvent.ALT_MASK));
+		preferencesItem.getAccessibleContext().setAccessibleDescription("Opens Preferences");
+		preferencesItem.addActionListener(this);
+		preferencesItem.setActionCommand("pref");
 		
 		// help Item
 		helpItem = new JMenuItem("Help", KeyEvent.VK_T);
@@ -98,12 +124,10 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 		dateiMenu.add(selectSorceItem);
 		dateiMenu.add(selectDestItem);
 		dateiMenu.add(exitItem);
+		editMenu.add(preferencesItem);
 		helpMenu.add(helpItem);
 		
 		this.setJMenuBar(menuBar);
-		
-		contentPane = new ASH_Panel1();
-		this.setContentPane(contentPane);
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
@@ -133,6 +157,8 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 		}
 		if (e.equals("help")) {
 			contentPane.setOutput("Ask STLEN or ALTAT! :-P");
+			JOptionPane.showMessageDialog(this,
+				    "Ask STLEN or ALTAT! :-P.");
 		}
 		if (e.equals("sorce")) {
 			fileChooser.showOpenDialog(this);
@@ -140,22 +166,25 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 			if (sorce != null) {
 				contentPane.setOutput("Selected Sorce: " + sorce.getAbsolutePath());
 				workerBee.setPathToFiles(sorce.getAbsolutePath());
+				contentPane.setSorceSelected(true);
 			}
-			contentPane.setSorceSelected(true);
 		}
 		if (e.equals("destination")) {
 			fileChooser.showOpenDialog(this);
 			destination = fileChooser.getSelectedFile();
 			if (destination != null) {
-				contentPane.setOutput("Selected Destination: " + destination.getAbsolutePath() 
-						+ "[Debug] hasn't been implemented yet");
+				contentPane.setOutput("Selected Destination: " + destination.getAbsolutePath());
+				workerBee.setPathToDestinationFiles(destination.getAbsolutePath());
+				contentPane.setDestinationSelected(true);
 			}
-			contentPane.setDestinationSelected(true);
+		}
+		if (e.equals("pref")) {
+			prefFrame.setVisible(true);
 		}
 	}
 	
 	public boolean getUmbenennen() {
-		return false;
+		return prefFrame.isChangeNames();
 	}
 
 	public ASH_Panel1 getContentPane() {
@@ -164,6 +193,10 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 
 	public WorkerBeeForASH getWorkerBee() {
 		return workerBee;
+	}
+	
+	public void setMenuEnable(boolean enable) {
+		selectDestItem.setEnabled(enable);
 	}
 	
 }
