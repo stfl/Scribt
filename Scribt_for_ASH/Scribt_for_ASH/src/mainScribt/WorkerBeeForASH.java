@@ -12,9 +12,7 @@ import java.io.InputStreamReader;
 
 import ashGui.ASH_JFrame;
 
-public class WorkerBeeForASH {
-	
-	private static WorkerBeeForASH  workerBee = null;
+public class WorkerBeeForASH implements Runnable {
 	
 	String textContent = "";
 	String pathToFiles = "U:/Ökostromdecklung - OSD Team Liste/ASH_files/01-2011";
@@ -34,15 +32,9 @@ public class WorkerBeeForASH {
 	int alreadyExisted = 0;
 	int single = 0;
 	
-	// Singelteon Pattern
-	public static WorkerBeeForASH instance() {
-		if (workerBee == null) {
-			workerBee = new WorkerBeeForASH();
-		}
-		return workerBee;
-	}
-	
 	public void work() {
+		
+		ASH_JFrame.instance().getContentPane().setOutput("Bee is starting to work...");
 		
 		findFiles(pathToFiles);
 		
@@ -63,6 +55,7 @@ public class WorkerBeeForASH {
 							"LeistungNeu: " + parser.getLeistungNeu() + " kWp\t" +
 							"Differenz: " + parser.getDifferenz() + " " + parser.getErweiterung() +							
 							"\n\n");
+					
 					ASH_JFrame.instance().getContentPane().setOutput(listOfFiles[i] + "\n" +
 							"Nachname: " + parser.getNachname() + "\t" +
 							"Datum: " + parser.getDatum() + "\t" + 
@@ -272,6 +265,11 @@ public class WorkerBeeForASH {
 
 	public void setPathToFiles(String pathToFiles) {
 		this.pathToFiles = pathToFiles;
+	}
+
+	@Override
+	public void run() {
+		work();
 	}
 	
 }

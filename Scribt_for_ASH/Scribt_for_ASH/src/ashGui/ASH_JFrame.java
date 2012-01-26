@@ -35,6 +35,7 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 	JMenuItem selectDestItem;
 	
 	final JFileChooser fileChooser = new JFileChooser();
+	WorkerBeeForASH workerBee = new WorkerBeeForASH();
 	
 	public ASH_JFrame() {
 		
@@ -138,7 +139,7 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 			sorce = fileChooser.getSelectedFile();
 			if (sorce != null) {
 				contentPane.setOutput("Selected Sorce: " + sorce.getAbsolutePath());
-				WorkerBeeForASH.instance().setPathToFiles(sorce.getAbsolutePath());
+				workerBee.setPathToFiles(sorce.getAbsolutePath());
 			}
 			contentPane.setSorceSelected(true);
 		}
@@ -159,6 +160,10 @@ public class ASH_JFrame extends JFrame implements ActionListener {
 
 	public ASH_Panel1 getContentPane() {
 		return contentPane;
+	}
+
+	public WorkerBeeForASH getWorkerBee() {
+		return workerBee;
 	}
 	
 }

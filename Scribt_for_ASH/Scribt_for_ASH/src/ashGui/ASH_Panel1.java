@@ -11,8 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import mainScribt.WorkerBeeForASH;
-
 public class ASH_Panel1 extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
@@ -23,7 +21,7 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 	
 	private boolean anableStartButton = false;
 	private boolean sorceSelected = false;
-	private boolean destinationSelected = false;
+	private boolean destinationSelected = true;
 	
 	public ASH_Panel1() {
 		
@@ -76,6 +74,7 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 	public void setOutput(String text) {
 		String txt = output.getText() + "\n\n" + text;
 		this.output.setText(txt);
+		this.output.setCaretPosition(txt.length());
 	}
 
 	/**
@@ -114,7 +113,7 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 		// startButton
 		if (e.equals("start")) {
 			this.setOutput("starting...");
-			WorkerBeeForASH.instance().work();
+			new Thread(ASH_JFrame.instance().getWorkerBee()).start();
 		}
 	}
 	
