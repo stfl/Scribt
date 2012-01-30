@@ -14,7 +14,7 @@ public class parsePdf {
 	private String Nachname = "";
 	private String Datum = "";
 	private String Kennzahl = "";
-	private String Leistung = "";
+	private String Leistung;
 	private String inputString = "";
 	private String LeistungNeu = "";
 	private String LeistungAlt = "";
