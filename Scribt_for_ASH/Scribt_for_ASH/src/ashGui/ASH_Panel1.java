@@ -51,10 +51,13 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 		startButton.setToolTipText("Enebled if sorce and destination is valid.");
 		startButton.setEnabled(anableStartButton);
 		
-		ImageIcon beeIcon = createImageIcon("WorkerBee.png");
-		JLabel beeLabel = new JLabel(beeIcon);
-		
-		this.add(beeLabel, BorderLayout.CENTER);
+		try {
+			ImageIcon beeIcon = createImageIcon("WorkerBee.jpg");
+			JLabel beeLabel = new JLabel(beeIcon);
+			this.add(beeLabel, BorderLayout.CENTER);
+		} catch (Exception e) {
+			System.out.println("no image found");
+		}
 		
 		this.add(startButton, BorderLayout.EAST);
 		this.add(scrollPane, BorderLayout.AFTER_LAST_LINE);
