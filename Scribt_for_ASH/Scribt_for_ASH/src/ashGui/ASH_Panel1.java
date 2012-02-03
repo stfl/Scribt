@@ -52,7 +52,7 @@ public class ASH_Panel1 extends JPanel implements ActionListener {
 		startButton.setEnabled(anableStartButton);
 		
 		try {
-			ImageIcon beeIcon = createImageIcon("WorkerBee.jpg");
+			ImageIcon beeIcon = createImageIcon("workerbee.jpg");
 			JLabel beeLabel = new JLabel(beeIcon);
 			this.add(beeLabel, BorderLayout.CENTER);
 		} catch (Exception e) {
