@@ -70,7 +70,7 @@ public class WorkerBeeForASH implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				result += "NÖ" + ";" + 
+				result += "ST" + ";" + 
 						parser.getNachname() + ";" + 
 						parser.getDatum() + ";" + 
 						parser.getKennzahl() + ";" + 
