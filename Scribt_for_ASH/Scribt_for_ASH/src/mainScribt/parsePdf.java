@@ -12,12 +12,16 @@ import java.util.regex.Pattern;
 public class parsePdf {
 	
 	private enum parse_state {
-		searchTop,
-		searchBottom,
-		name,
-		date,
+		waitName,
+		searchName,
+		searchLeistung,
+		searchKNZ,
+		searchDate,
+		
+		waitLeistungAltNeu,
 		searchLeistungAlt,
-		searchAenderung,
+		searchLeistungNeu,
+		
 		done;
 	}
 	
@@ -29,7 +33,7 @@ public class parsePdf {
 	private String LeistungNeu = "";
 	private String LeistungAlt = "";
 	private float Differenz = 0;
-	parse_state state = parse_state.searchTop;
+	parse_state state = parse_state.waitName;
 	
 
 		public parsePdf()
@@ -54,19 +58,88 @@ public class parsePdf {
 				String zeile = null;
 				String zeile_old = "";
 				while ((zeile = in.readLine()) != null) {
-					//System.out.println("Gelesene Zeile: " + zeile);
-					
-					
-					if (zeile.equals("Abänderung des Anerkennungsbescheides  ")){
-						aenderung = true;
-						this.Leistung = "";
-					}
-					if (zeile.equals("S p r u c h")) {
-						state = parse_state.searchBottom;
-						//System.out.println("Top finished");
-					}
-					
+					System.out.println(state + " Gelesene Zeile: " + zeile);
+
 					switch(state) {
+						case waitName:
+							if (zeile.equals("_ ")){
+								this.state = parse_state.searchName; 
+							}
+						break;
+						case searchName:
+							if (zeile.length() > 5) {
+								if (zeile.startsWith("Netzgeführte Photovoltaikanlage")){
+									this.state = parse_state.waitLeistungAltNeu;
+									aenderung = true;
+									this.Leistung = "";
+										//TODO Änderungen?!
+									break;
+								}
+								if (zeile.indexOf(',') != -1)
+									this.Nachname = zeile.substring(0, zeile.indexOf(','));
+								else
+									this.Nachname = zeile;
+								this.state = parse_state.searchLeistung;
+							}
+						break;
+						
+						case waitLeistungAltNeu: {
+							if (zeile.startsWith("Ursprüngliche Daten")) {
+								this.state = parse_state.searchLeistungAlt;
+							}
+							if (zeile.startsWith("aktuelle Daten")) {
+								this.state = parse_state.searchLeistungNeu;
+							}
+						}
+						
+						case searchLeistung:
+							if (zeile.indexOf(" kWpeak ") != -1){
+								String tmp = zeile.substring(0, zeile.indexOf(" kWpeak ")-1);
+								this.Leistung = tmp.substring(tmp.lastIndexOf(' ')+1);
+								this.state = parse_state.searchKNZ;
+							}
+						break;
+						
+						case searchLeistungAlt:
+							if (zeile.indexOf(" kWpeak ") != -1){
+								String tmp = zeile.substring(0, zeile.indexOf(" kWpeak ")-1);
+								this.LeistungAlt = tmp.substring(tmp.lastIndexOf(' ')+1);
+								if (this.LeistungNeu.equals(""))
+									this.state = parse_state.waitLeistungAltNeu;
+								else 		//TODO irgendwas funktioniert noch ned => morgen debuggen ;)
+									this.state = parse_state.searchKNZ;
+							}
+						break;
+						
+						case searchLeistungNeu:
+							if (zeile.indexOf(" kWpeak ") != -1){
+								String tmp = zeile.substring(0, zeile.indexOf(" kWpeak ")-1);
+								this.LeistungNeu = tmp.substring(tmp.lastIndexOf(' ')+1);
+								if (this.LeistungAlt.equals(""))
+									this.state = parse_state.waitLeistungAltNeu;
+								else 
+									this.state = parse_state.searchKNZ;
+							}
+						break;
+						
+						case searchKNZ:
+							if (zeile.startsWith("EnRo-")){
+								this.Kennzahl = zeile;
+								this.state = parse_state.searchDate;
+							}
+						break;
+						case searchDate:
+							if (zeile.startsWith("Linz, ")){
+								this.Datum = zeile.substring(6);
+								this.state = parse_state.done;
+								break;
+							}
+						break;
+					
+					}
+					
+					
+			/*		switch(state) {
 						
 						case searchTop:
 							if (zeile.startsWith("GZ:")) {
@@ -87,7 +160,7 @@ public class parsePdf {
 								}
 										TODO: Herr Frau Titel.. entfernen evntl Nachname suchen
 											
-								*/
+								*
 								
 								this.Nachname = zeile.substring(7);
 								//System.out.println("NN found");
@@ -135,7 +208,7 @@ public class parsePdf {
 								state = parse_state.done;
 							}
 							break;
-					}
+					}*/
 					
 					
 					if (state == parse_state.done){
