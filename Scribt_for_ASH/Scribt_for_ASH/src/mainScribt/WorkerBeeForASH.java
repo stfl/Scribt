@@ -10,6 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import parser.parseNOE;
+
 import ashGui.ASH_JFrame;
 
 public class WorkerBeeForASH implements Runnable {

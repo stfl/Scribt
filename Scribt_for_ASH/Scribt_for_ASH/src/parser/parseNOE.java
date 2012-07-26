@@ -1,4 +1,4 @@
-package mainScribt;
+package parser;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -7,28 +7,16 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+public class parseNOE extends parsePdf{
 
-
-public class parseNOE {
 	
-	private String Nachname = "";
-	private String Datum = "";
-	private String Kennzahl = "";
-	private String Leistung;
-	private String inputString = "";
-	private String LeistungNeu = "";
-	private String LeistungAlt = "";
-	private float Differenz = 0;
-
 		public parseNOE()
 		{
 			super();
 		}
 		
-		public synchronized void setString(String inputString) {
-			this.inputString = inputString;
-		}
 		
+		@Override
 		public void parse() throws FileNotFoundException, IOException
 		{
 			boolean foundNachname = false;
@@ -158,48 +146,6 @@ public class parseNOE {
 				//dem Anlagenteil mit einer Leistung von 6,45 kWp, Einspeisezählpunkt
 			}
 		}	
-
-
-		public String getNachname() {
-			return Nachname;
-		}
-
-		public String getDatum() {
-			return Datum;
-		}
-
-		public String getKennzahl() {
-			return Kennzahl;
-		}
-
-		public String getLeistung() {
-			return Leistung;
-		}
-		
-		public String getLeistungNeu() {
-			return LeistungNeu;
-		}
-		
-		public String getLeistungAlt() {
-			return LeistungAlt;
-		}
-		
-		public String getDifferenz() {
-			if (this.Differenz == 0) return "";
-			else return abs(this.Differenz).toString().replace('.', ',');
-		}
-		
-		public String getErweiterung() {
-			if (this.Differenz == 0) return "";
-			else if (this.Differenz > 0) return "Erweiterung";
-			else return "Reduzierung";
-		}
-		
-		private Float abs(float diff) {
-			if (diff  < 0) {
-				diff *= -1;
-			}
-			return diff;
-		}
+	
 	
 }
