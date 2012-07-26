@@ -58,23 +58,39 @@ public class parseSTMK extends parsePdf {
 								//System.out.println("GZ found");
 							} else if (zeile.startsWith("Ggst.:")) {
 								
-						/*		String partNachname = zeile.substring(7);
+								String tmpName = zeile.substring(7);
 								
+								/*int i= 0;	//Nachname normal an erster Stelle
+								String[] zeileArray = tmpName.split(" ",5);
 								for (int j=0; j< excludeTitles.length ;j++) {
-									if (partNachname.toLowerCase().startsWith(excludeTitles[j]) {
-										partNachname = partNachname.substring(excludeTitles[j].length());
-										break;
-									} if (partNachname.toLowerCase().startsWith(excludeTitles[j]+".")) {
-										partNachname = partNachname.substring(excludeTitles[j].length()+1);
-										break;
+									if (zeileArray[i].toLowerCase().equals(excludeTitles[j]) || zeileArray[i].toLowerCase().equals(excludeTitles[j]+".")) {
+										i++;
 									}
 								}
-										TODO: Herr Frau Titel.. entfernen evntl Nachname suchen
-											
+								if (zeileArray.length >= i+1) {
+									if (zeileArray[i].equals("und")) i+=2;
+								}
+								if (zeileArray.length < i+1) {
+									System.out.println("_NO_ Nachname found\n");
+								} else {
+									this.Nachname = zeileArray[i];
+								}  TODO Nachname suchen -> funktioniert nicht richtig.. is fehleranfälliger als ohne
 								*/
 								
-								this.Nachname = zeile.substring(7);
-								//System.out.println("NN found");
+								this.Nachname = tmpName.replace("," , "")
+										.replace("Herr ", "")
+										.replace("Frau ", "")
+										.replace("Dr. ", "")
+										.replace("Dr.", "")
+										.replace("Dr", "")
+										.replace("DI. ", "")
+										.replace("DI ", "")
+										.replace("DI", "")
+										.replace("Ing. ", "")
+										.replace("Ing ", "")
+										.replace("Ing", "")
+										.trim();		//TODO regex
+															
 								this.state = parse_state.date;
 							}
 							break;
@@ -106,7 +122,7 @@ public class parseSTMK extends parsePdf {
 								String s = "";
 								while (m.find()) {
 								    s = m.group(0);
-								    System.out.println(s);
+								  //  System.out.println(s);
 								    break;
 								}
 								int end = s.indexOf("kW");
