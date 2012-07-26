@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 
 
-public class parsePdf {
+public class parseNOE {
 	
 	private String Nachname = "";
 	private String Datum = "";
@@ -20,7 +20,7 @@ public class parsePdf {
 	private String LeistungAlt = "";
 	private float Differenz = 0;
 
-		public parsePdf()
+		public parseNOE()
 		{
 			super();
 		}

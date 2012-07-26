@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 
 
 
-public class parsePdf {
+public class parseOOE {
 	
 	private enum parse_state {
 		waitName,
@@ -37,7 +37,7 @@ public class parsePdf {
 	private String Differenz = "";
 	parse_state state = parse_state.waitName;
 
-		public parsePdf()
+		public parseOOE()
 		{
 			super();
 		}

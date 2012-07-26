@@ -19,7 +19,7 @@ public class WorkerBeeForASH implements Runnable {
 	String pathToDestinationFiles = "";
 //	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
-	parsePdf parser;
+	parseNOE parser;
 	PDFTextParser pdfTextParserObj;
 	String result = "";
 	
@@ -44,7 +44,7 @@ public class WorkerBeeForASH implements Runnable {
 				
 				convertPdfToTxt(listOfFiles[i].getName());
 				
-				parser = new parsePdf();
+				parser = new parseNOE();
 				parser.setString(textContent);
 				try {
 					parser.parse();

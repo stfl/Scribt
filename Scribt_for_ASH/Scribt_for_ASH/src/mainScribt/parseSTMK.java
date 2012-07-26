@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 
 
-public class parsePdf {
+public class parseSTMK {
 	
 	private enum parse_state {
 		searchTop,
@@ -32,7 +32,7 @@ public class parsePdf {
 	parse_state state = parse_state.searchTop;
 	
 
-		public parsePdf()
+		public parseSTMK()
 		{
 			super();
 		}
