@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.text.DecimalFormat;
 
 
 
@@ -15,6 +14,7 @@ public class parsePdf {
 		waitName,
 		searchName,
 		searchLeistung,
+		waitKNZ,
 		searchKNZ,
 		searchDate,
 		
@@ -25,6 +25,8 @@ public class parsePdf {
 		done;
 	}
 	
+	DecimalFormat df = new DecimalFormat("###.###");
+	
 	private String Nachname = "";
 	private String Datum = "";
 	private String Kennzahl = "";
@@ -32,9 +34,8 @@ public class parsePdf {
 	private String inputString = "";
 	private String LeistungNeu = "";
 	private String LeistungAlt = "";
-	private float Differenz = 0;
+	private String Differenz = "";
 	parse_state state = parse_state.waitName;
-	
 
 		public parsePdf()
 		{
@@ -47,20 +48,16 @@ public class parsePdf {
 		
 		public void parse() throws FileNotFoundException, IOException
 		{
-			boolean aenderung = false;
-			
-			
 			
 			String[] excludeTitles = {"di","mag","mba","dr","ddr","mmag","ing","dipl.-ing","herr","frau"};
 			
 			try {
 				BufferedReader in = new BufferedReader(new StringReader(inputString));
 				String zeile = null;
-				String zeile_old = "";
 				while ((zeile = in.readLine()) != null) {
-					System.out.println(state + " Gelesene Zeile: " + zeile);
+					//System.out.println(state + " Gelesene Zeile: " + zeile);
 
-					switch(state) {
+					switch(this.state) {
 						case waitName:
 							if (zeile.equals("_ ")){
 								this.state = parse_state.searchName; 
@@ -70,9 +67,7 @@ public class parsePdf {
 							if (zeile.length() > 5) {
 								if (zeile.startsWith("Netzgeführte Photovoltaikanlage")){
 									this.state = parse_state.waitLeistungAltNeu;
-									aenderung = true;
 									this.Leistung = "";
-										//TODO Änderungen?!
 									break;
 								}
 								if (zeile.indexOf(',') != -1)
@@ -84,6 +79,15 @@ public class parsePdf {
 						break;
 						
 						case waitLeistungAltNeu: {
+							if (zeile.startsWith("Sehr geehrte")) {		//Nachname doch noch gefunden
+								String tmp = zeile.substring(10);
+								String tmpName = tmp.substring(tmp.indexOf(' ')+1).replace("!", "");
+							/*	for (String title : excludeTitles){
+								//	tmpName = tmpName.replace(title, "")
+								} TODO Titel raus löschen
+								*/
+								this.Nachname = tmpName;
+							}
 							if (zeile.startsWith("Ursprüngliche Daten")) {
 								this.state = parse_state.searchLeistungAlt;
 							}
@@ -96,7 +100,7 @@ public class parsePdf {
 							if (zeile.indexOf(" kWpeak ") != -1){
 								String tmp = zeile.substring(0, zeile.indexOf(" kWpeak ")-1);
 								this.Leistung = tmp.substring(tmp.lastIndexOf(' ')+1);
-								this.state = parse_state.searchKNZ;
+								this.state = parse_state.waitKNZ;
 							}
 						break;
 						
@@ -106,8 +110,9 @@ public class parsePdf {
 								this.LeistungAlt = tmp.substring(tmp.lastIndexOf(' ')+1);
 								if (this.LeistungNeu.equals(""))
 									this.state = parse_state.waitLeistungAltNeu;
-								else 		//TODO irgendwas funktioniert noch ned => morgen debuggen ;)
-									this.state = parse_state.searchKNZ;
+								else {
+									this.state = parse_state.waitKNZ;
+								}
 							}
 						break;
 						
@@ -117,16 +122,22 @@ public class parsePdf {
 								this.LeistungNeu = tmp.substring(tmp.lastIndexOf(' ')+1);
 								if (this.LeistungAlt.equals(""))
 									this.state = parse_state.waitLeistungAltNeu;
-								else 
-									this.state = parse_state.searchKNZ;
+								else {
+									this.state = parse_state.waitKNZ;
+									
+								}							
+							}
+						break;
+						
+						case waitKNZ:
+							if (zeile.startsWith("Geschäftszeichen:")){
+								this.state = parse_state.searchKNZ;
 							}
 						break;
 						
 						case searchKNZ:
-							if (zeile.startsWith("EnRo-")){
-								this.Kennzahl = zeile;
+								this.Kennzahl = zeile.replace(" ", "");
 								this.state = parse_state.searchDate;
-							}
 						break;
 						case searchDate:
 							if (zeile.startsWith("Linz, ")){
@@ -135,87 +146,11 @@ public class parsePdf {
 								break;
 							}
 						break;
-					
-					}
-					
-					
-			/*		switch(state) {
 						
-						case searchTop:
-							if (zeile.startsWith("GZ:")) {
-								this.Kennzahl = zeile.substring(4);
-								//System.out.println("GZ found");
-							} else if (zeile.startsWith("Ggst.:")) {
-								
-						/*		String partNachname = zeile.substring(7);
-								
-								for (int j=0; j< excludeTitles.length ;j++) {
-									if (partNachname.toLowerCase().startsWith(excludeTitles[j]) {
-										partNachname = partNachname.substring(excludeTitles[j].length());
-										break;
-									} if (partNachname.toLowerCase().startsWith(excludeTitles[j]+".")) {
-										partNachname = partNachname.substring(excludeTitles[j].length()+1);
-										break;
-									}
-								}
-										TODO: Herr Frau Titel.. entfernen evntl Nachname suchen
+						case done:
+							return;
 											
-								*
-								
-								this.Nachname = zeile.substring(7);
-								//System.out.println("NN found");
-								this.state = parse_state.date;
-							}
-							break;
-							
-						case date:
-							//if (zeile.equals("B e s c h e i d ")){
-							if (zeile.indexOf(", am ") != -1) {
-								this.Datum = zeile.substring( zeile.indexOf(", am ")+5);
-								//System.out.println("Date found");
-								this.state = parse_state.searchBottom;
-							}
-							break;
-							
-						case searchBottom:
-							if (aenderung == false) {
-								if (zeile.startsWith("Engpassleistung:")) {	
-									//System.out.println("Engpassleistung:".length());
-									int end = zeile.indexOf("kW");
-									if (end > 19) {
-										this.Leistung = zeile.substring(16, end-1);
-										//System.out.println("Leistung found");
-										state = parse_state.done;
-									}
-								}
-							} else {
-								//System.out.println("\tsearch for Aenderung");
-								Pattern MY_PATTERN = Pattern.compile("[0-9]+[,]?[0-9]*[\n ]?kWP[\n ]?+[(]an[\n ]?+Stelle[\n ]?+[0-9]+[,]?[0-9]*");
-								Matcher m = MY_PATTERN.matcher(inputString);
-								String s = "";
-								while (m.find()) {
-								    s = m.group(0);
-								    System.out.println(s);
-								    break;
-								}
-								int end = s.indexOf("kW");
-								if (end >= 1) {
-									this.LeistungNeu = s.substring(0, s.indexOf("kW"));
-									this.Leistung = "";
-									this.LeistungAlt = s.substring(s.lastIndexOf(" "));
-									this.Differenz = Float.parseFloat(LeistungNeu.replace(',', '.')) - Float.parseFloat(LeistungAlt.replace(',', '.'));
-								}					
-								state = parse_state.done;
-							}
-							break;
-					}*/
-					
-					
-					if (state == parse_state.done){
-						return;
-					}
-					zeile_old = zeile;
-										
+					}											
 					
 				}
 			} catch (IOException e) {
@@ -249,21 +184,30 @@ public class parsePdf {
 		}
 		
 		public String getDifferenz() {
-			if (this.Differenz == 0) return "";
-			else return abs(this.Differenz).toString().replace('.', ',');
+			if (this.Differenz.equals("")) {
+				if (this.LeistungAlt.equals("") || this.LeistungNeu.equals(""))
+					return "";
+				else {
+					float tmpAlt = Float.parseFloat(LeistungAlt.replace(',', '.'));
+					float tmpNeu = Float.parseFloat(LeistungNeu.replace(',', '.'));
+					float tmpDiff = tmpNeu-tmpAlt;
+					this.Differenz = df.format(tmpDiff).toString().replace('.', ',');
+				}
+			}
+			if (this.Differenz.equals("0"))
+				return "";
+			else
+				return this.Differenz.replace("-", "");
 		}
 		
 		public String getErweiterung() {
-			if (this.Differenz == 0) return "";
-			else if (this.Differenz > 0) return "Erweiterung";
-			else return "Reduzierung";
-		}
-		
-		private Float abs(float diff) {
-			if (diff  < 0) {
-				diff *= -1;
-			}
-			return diff;
+			if (this.Differenz.equals("")) return "";
+			else if (this.Differenz.equals("0"))
+				return "im Betrieb";
+			else if (this.Differenz.charAt(0) == '-') 
+				return "Verringerung";
+			else 
+				return "Erweiterung";
 		}
 	
 }
