@@ -54,6 +54,7 @@ public class WorkerBeeForASH implements Runnable {
 							"Kennzahl: " + parser.getKennzahl() + "\n" + 
 							"Leistung: " + parser.getLeistung() + " kWp\t" + 
 							"LeistungNeu: " + parser.getLeistungNeu() + " kWp\t" +
+							"Alt: " + parser.getLeistungAlt() + "\t" +
 							"Differenz: " + parser.getDifferenz() + " " + parser.getErweiterung() +							
 							"\n\n");
 					
@@ -63,6 +64,7 @@ public class WorkerBeeForASH implements Runnable {
 							"Kennzahl: " + parser.getKennzahl() + "\n" + 
 							"Leistung: " + parser.getLeistung() + " kWp\t" + 
 							"LeistungNeu: " + parser.getLeistungNeu() + " kWp\t" +
+							"Alt: " + parser.getLeistungAlt() + "\t" +
 							"Differenz: " + parser.getDifferenz() + " " + parser.getErweiterung() +							
 							"\n\n");
 				} catch (FileNotFoundException e) {
