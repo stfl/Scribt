@@ -47,15 +47,33 @@ public class parseOOE extends parsePdf {
 						break;
 						case searchName:
 							if (zeile.length() > 5) {
+								String tmpName = "";
 								if (zeile.startsWith("Netzgeführte Photovoltaikanlage")){
 									this.state = parse_state.waitLeistungAltNeu;
 									this.Leistung = "";
 									break;
 								}
 								if (zeile.indexOf(',') != -1)
-									this.Nachname = zeile.substring(0, zeile.indexOf(','));
+									tmpName = zeile.substring(0, zeile.indexOf(','));
 								else
-									this.Nachname = zeile;
+									tmpName = zeile;
+								
+								int i= 1;	//Nachname normal an zweiter Stelle
+								String[] zeileArray = tmpName.split(" ",5);
+								for (int j=0; j< excludeTitles.length ;j++) {
+									if (zeileArray[i-1].toLowerCase().equals(excludeTitles[j]) || zeileArray[i-1].toLowerCase().equals(excludeTitles[j]+".")) {
+										i++;
+									}
+								}
+								if (zeileArray.length >= i+1) {
+									if (zeileArray[i].equals("und")) i+=2;
+								}
+								if (zeileArray.length < i+1) {
+									System.out.println("_NO_ Nachname found\n");
+								} else {
+									this.Nachname = zeileArray[i];
+								}
+								
 								this.state = parse_state.searchLeistung;
 							}
 						break;
@@ -68,7 +86,23 @@ public class parseOOE extends parsePdf {
 								//	tmpName = tmpName.replace(title, "")
 								} TODO Titel raus löschen
 								*/
-								this.Nachname = tmpName;
+								
+								int i= 1;
+								String[] zeileArray = tmpName.split(" ",5);
+								for (int j=0; j< excludeTitles.length ;j++) {
+									if (zeileArray[i].toLowerCase().equals(excludeTitles[j]) || zeileArray[i].toLowerCase().equals(excludeTitles[j]+".")) {
+										i++;
+									}
+								}
+								if (zeileArray.length < i+1) {
+									System.out.println("_NO_ Nachname found\n");
+								} else {
+									if (zeileArray[i].equals("und"))
+										this.Nachname = tmpName;
+									else
+										this.Nachname = zeileArray[i];
+								}
+								
 							}
 							if (zeile.startsWith("Ursprüngliche Daten")) {
 								this.state = parse_state.searchLeistungAlt;
