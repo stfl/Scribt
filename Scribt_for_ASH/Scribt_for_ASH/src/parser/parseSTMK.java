@@ -78,19 +78,14 @@ public class parseSTMK extends parsePdf {
 								*/
 								
 								this.Nachname = tmpName.replace("," , "")
-										.replace("Herr ", "")
-										.replace("Frau ", "")
-										.replace("Dr. ", "")
-										.replace("Dr.", "")
-										.replace("Dr", "")
-										.replace("DI. ", "")
-										.replace("DI ", "")
-										.replace("DI", "")
-										.replace("Ing. ", "")
-										.replace("Ing ", "")
-										.replace("Ing", "")
-										.trim();		//TODO regex
-															
+										.replaceAll("Herr[ ]+", "")
+										.replaceAll("Frau[ ]+", "")
+										.replaceAll("Mag[.]? ", "")
+										.replaceAll("Dr[.]? ", "")
+										.replaceAll("DI[.]? ", "")
+										.replaceAll("Ing[.]? ", "")
+										.trim();		//TODO erweitern
+								System.out.println(this.Nachname + "\n" + tmpName);						
 								this.state = parse_state.date;
 							}
 							break;
