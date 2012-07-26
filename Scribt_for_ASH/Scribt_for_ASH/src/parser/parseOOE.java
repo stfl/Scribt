@@ -4,11 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.DecimalFormat;
 
-
-
-public class parseOOE {
+public class parseOOE extends parsePdf {
 	
 	private enum parse_state {
 		waitName,
@@ -25,31 +22,16 @@ public class parseOOE {
 		done;
 	}
 	
-	DecimalFormat df = new DecimalFormat("###.###");
-	
-	private String Nachname = "";
-	private String Datum = "";
-	private String Kennzahl = "";
-	private String Leistung;
-	private String inputString = "";
-	private String LeistungNeu = "";
-	private String LeistungAlt = "";
-	private String Differenz = "";
-	parse_state state = parse_state.waitName;
+		parse_state state = parse_state.waitName;
 
 		public parseOOE()
 		{
 			super();
 		}
 		
-		public synchronized void setString(String inputString) {
-			this.inputString = inputString;
-		}
-		
+		@Override
 		public void parse() throws FileNotFoundException, IOException
 		{
-			
-			String[] excludeTitles = {"di","mag","mba","dr","ddr","mmag","ing","dipl.-ing","herr","frau"};
 			
 			try {
 				BufferedReader in = new BufferedReader(new StringReader(inputString));
@@ -157,57 +139,5 @@ public class parseOOE {
 				e.printStackTrace();
 			}
 		}	
-
-
-		public String getNachname() {
-			return Nachname;
-		}
-
-		public String getDatum() {
-			return Datum;
-		}
-
-		public String getKennzahl() {
-			return Kennzahl;
-		}
-
-		public String getLeistung() {
-			return Leistung;
-		}
-		
-		public String getLeistungNeu() {
-			return LeistungNeu;
-		}
-		
-		public String getLeistungAlt() {
-			return LeistungAlt;
-		}
-		
-		public String getDifferenz() {
-			if (this.Differenz.equals("")) {
-				if (this.LeistungAlt.equals("") || this.LeistungNeu.equals(""))
-					return "";
-				else {
-					float tmpAlt = Float.parseFloat(LeistungAlt.replace(',', '.'));
-					float tmpNeu = Float.parseFloat(LeistungNeu.replace(',', '.'));
-					float tmpDiff = tmpNeu-tmpAlt;
-					this.Differenz = df.format(tmpDiff).toString().replace('.', ',');
-				}
-			}
-			if (this.Differenz.equals("0"))
-				return "";
-			else
-				return this.Differenz.replace("-", "");
-		}
-		
-		public String getErweiterung() {
-			if (this.Differenz.equals("")) return "";
-			else if (this.Differenz.equals("0"))
-				return "im Betrieb";
-			else if (this.Differenz.charAt(0) == '-') 
-				return "Verringerung";
-			else 
-				return "Erweiterung";
-		}
 	
 }

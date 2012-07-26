@@ -9,26 +9,18 @@ import java.util.regex.Pattern;
 
 
 
-public class parseSTMK {
+public class parseSTMK extends parsePdf {
 	
 	private enum parse_state {
 		searchTop,
 		searchBottom,
-		name,
+	//	name,
 		date,
-		searchLeistungAlt,
-		searchAenderung,
+	//	searchLeistungAlt,
+	//	searchAenderung,
 		done;
 	}
 	
-	private String Nachname = "";
-	private String Datum = "";
-	private String Kennzahl = "";
-	private String Leistung;
-	private String inputString = "";
-	private String LeistungNeu = "";
-	private String LeistungAlt = "";
-	private float Differenz = 0;
 	parse_state state = parse_state.searchTop;
 	
 
@@ -36,23 +28,15 @@ public class parseSTMK {
 		{
 			super();
 		}
-		
-		public synchronized void setString(String inputString) {
-			this.inputString = inputString;
-		}
-		
+	
+		@Override
 		public void parse() throws FileNotFoundException, IOException
 		{
 			boolean aenderung = false;
-			
-			
-			
-			String[] excludeTitles = {"di","mag","mba","dr","ddr","mmag","ing","dipl.-ing","herr","frau"};
-			
+				
 			try {
 				BufferedReader in = new BufferedReader(new StringReader(inputString));
 				String zeile = null;
-				String zeile_old = "";
 				while ((zeile = in.readLine()) != null) {
 					//System.out.println("Gelesene Zeile: " + zeile);
 					
@@ -130,67 +114,17 @@ public class parseSTMK {
 									this.LeistungNeu = s.substring(0, s.indexOf("kW"));
 									this.Leistung = "";
 									this.LeistungAlt = s.substring(s.lastIndexOf(" "));
-									this.Differenz = Float.parseFloat(LeistungNeu.replace(',', '.')) - Float.parseFloat(LeistungAlt.replace(',', '.'));
 								}					
 								state = parse_state.done;
 							}
 							break;
-					}
-					
-					
-					if (state == parse_state.done){
-						return;
-					}
-					zeile_old = zeile;
-										
-					
+							
+							case done:
+								return;
+					}	
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}	
-
-
-		public String getNachname() {
-			return Nachname;
-		}
-
-		public String getDatum() {
-			return Datum;
-		}
-
-		public String getKennzahl() {
-			return Kennzahl;
-		}
-
-		public String getLeistung() {
-			return Leistung;
-		}
-		
-		public String getLeistungNeu() {
-			return LeistungNeu;
-		}
-		
-		public String getLeistungAlt() {
-			return LeistungAlt;
-		}
-		
-		public String getDifferenz() {
-			if (this.Differenz == 0) return "";
-			else return abs(this.Differenz).toString().replace('.', ',');
-		}
-		
-		public String getErweiterung() {
-			if (this.Differenz == 0) return "";
-			else if (this.Differenz > 0) return "Erweiterung";
-			else return "Reduzierung";
-		}
-		
-		private Float abs(float diff) {
-			if (diff  < 0) {
-				diff *= -1;
-			}
-			return diff;
-		}
-	
+		}		
 }

@@ -24,9 +24,7 @@ public class parseNOE extends parsePdf{
 			boolean foundDatum = false; 
 			boolean DatumDone = false;
 			boolean foundGmbH = false;
-			
-			String[] excludeTitles = {"di","mag","mba","dr","ddr","mmag","ing"};
-			
+						
 			try {
 				BufferedReader in = new BufferedReader(new StringReader(inputString));
 				String zeile = null;
@@ -138,7 +136,6 @@ public class parseNOE extends parsePdf{
 					end = s.indexOf("kWp");
 					if (end >= 1) {
 						this.LeistungAlt = s.substring(0, end-1);
-						this.Differenz = Float.parseFloat(LeistungNeu.replace(',', '.')) - Float.parseFloat(LeistungAlt.replace(',', '.'));
 					}
 				}
 								
