@@ -65,7 +65,7 @@ public class parseNOE extends parsePdf{
 							}							
 							zeile_old = zeile;
 							
-						} else if (zeile.startsWith("Herrn") || zeile.startsWith("Frau") && foundNachname == false) { //only once
+						} else if (zeile.startsWith("Herr") || zeile.startsWith("Frau") && foundNachname == false) { //only once
 							foundNachname = true;
 							
 						} else if (zeile.startsWith("An den") || zeile.startsWith("An die") && foundGmbH == false) {
@@ -79,7 +79,7 @@ public class parseNOE extends parsePdf{
 						}
 					}
 					
-					if (zeile.startsWith("Leistung der")){
+					if (zeile.startsWith("Leistung der") || zeile.startsWith("Peakleistung")){
 						int end = zeile.indexOf("kWp");
 						if (end >= 1) {
 							int begin = zeile.substring(0, end-3).lastIndexOf(" ");
@@ -88,7 +88,7 @@ public class parseNOE extends parsePdf{
 						//System.out.println("Leistung: " + zeile.substring(begin+1, end-1));
 					}
 					
-					if (zeile.startsWith("WST6")){
+					if (zeile.startsWith("WST6") || zeile.startsWith("RU4-EL")){
 						this.Kennzahl = zeile.substring(0, zeile.indexOf(" "));
 						//System.out.println("Kennzahl: " + zeile);
 					}

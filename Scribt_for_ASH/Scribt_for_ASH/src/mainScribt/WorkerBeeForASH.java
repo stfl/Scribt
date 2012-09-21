@@ -10,8 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import parser.parseNOE;
-
+import parser.parseSTMK;
 import ashGui.ASH_JFrame;
 
 public class WorkerBeeForASH implements Runnable {
@@ -21,7 +20,7 @@ public class WorkerBeeForASH implements Runnable {
 	String pathToDestinationFiles = "";
 //	String filenamePDF = "U:/Ökostromdecklung - OSD Team Liste/ASH_files//Anschreiben_6.pdf";
 	
-	parseNOE parser;
+	parseSTMK parser;
 	PDFTextParser pdfTextParserObj;
 	String result = "";
 	
@@ -46,7 +45,7 @@ public class WorkerBeeForASH implements Runnable {
 				
 				convertPdfToTxt(listOfFiles[i].getName());
 				
-				parser = new parseNOE();
+				parser = new parseSTMK();
 				parser.setString(textContent);
 				try {
 					parser.parse();
@@ -72,7 +71,7 @@ public class WorkerBeeForASH implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				result += "NÖ" + ";" + 
+				result += "ST" + ";" + 
 						parser.getNachname() + ";" + 
 						parser.getDatum() + ";" + 
 						parser.getKennzahl() + ";" + 
