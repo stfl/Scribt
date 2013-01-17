@@ -22,7 +22,7 @@ public class parseOOE extends parsePdf {
 		done;
 	}
 	
-		parse_state state = parse_state.waitName;
+		parse_state state = parse_state.searchName; //waitName;
 
 		public parseOOE()
 		{
@@ -37,7 +37,7 @@ public class parseOOE extends parsePdf {
 				BufferedReader in = new BufferedReader(new StringReader(inputString));
 				String zeile = null;
 				while ((zeile = in.readLine()) != null) {
-					//System.out.println(state + " Gelesene Zeile: " + zeile);
+					System.out.println(state + " Gelesene Zeile: " + zeile);
 
 					switch(this.state) {
 						case waitName:
@@ -74,7 +74,7 @@ public class parseOOE extends parsePdf {
 									this.Nachname = zeileArray[i];
 								}
 								
-								this.state = parse_state.searchLeistung;
+								this.state = parse_state.waitKNZ; //searchLeistung;
 							}
 						break;
 						
@@ -116,7 +116,7 @@ public class parseOOE extends parsePdf {
 							if (zeile.indexOf(" kWpeak ") != -1){
 								String tmp = zeile.substring(0, zeile.indexOf(" kWpeak ")-1);
 								this.Leistung = tmp.substring(tmp.lastIndexOf(' ')+1);
-								this.state = parse_state.waitKNZ;
+								this.state = parse_state.done; //waitKNZ;
 							}
 						break;
 						
@@ -158,7 +158,7 @@ public class parseOOE extends parsePdf {
 						case searchDate:
 							if (zeile.startsWith("Linz, ")){
 								this.Datum = zeile.substring(6);
-								this.state = parse_state.done;
+								this.state = parse_state.searchLeistung;
 								break;
 							}
 						break;
